@@ -1,0 +1,55 @@
+<#-- 这是一个分页的模板 -->
+<#macro page url totalPage currentPage = 1 class="" showPageNum=10>
+	<#-- 获取一半的页数 -->
+	<#local halfPage = totalPage/2 />
+	<#local showHalfPage = showPageNum/2 />
+	<#--当前页小于一半的页数-->
+	一半页数：${halfPage}
+	当前页：${currentPage}
+	<br/>
+	<#--当前页小于总页数的一半--->
+	<#if (currentPage < halfPage)>
+	<#-- 当前页位小于显示页数的一半 -->
+		<#if (currentPage<showHalfPage)>
+			<@showPage start=1 end=showPageNum url=url class=class currentPage = currentPage totalPage=totalPage/>
+		<#else>
+			<@showPage start=currentPage-showHalfPage+1 end=currentPage+showHalfPage url=url class=class currentPage = currentPage totalPage= totalPage/>	
+		</#if>
+	<#--当前页大于一半值 --->
+	<#else>
+		<#-- 判断当前页是否小于最大值 -->
+		<#if (currentPage < totalPage-showHalfPage)>
+			<@showPage start=currentPage-showHalfPage+1 end=currentPage+showHalfPage url=url class=class currentPage = currentPage totalPage= totalPage/>	
+		<#else>
+			<@showPage start=totalPage-showPageNum+1 end=totalPage url=url class=class currentPage = currentPage totalPage= totalPage/>
+		</#if>	
+	</#if>
+</#macro>
+<#--展示页面方法-->
+<#macro showPage start end url class currentPage totalPage>
+	<#list start..end as page>
+		<#-- 当前页无连接-->
+		<#if page == currentPage>
+			<#if page==1>
+				<#--显示页码信息-->
+				[首页]
+			<#elseif page==totalPage>
+				<#--显示页码信息-->
+				[末页]
+			<#else>
+				[${page}]
+			</#if>
+		<#else>
+			<#if page==1>
+				<#--显示页码信息-->
+				<a href=${url} class=${class}>首页</a>
+			<#elseif page==totalPage>
+				<#--显示页码信息-->
+				<a href=${url} class=${class}>末页</a>
+			<#else>
+			<#--显示页码信息-->
+			<a href=${url} class=${class}>${page}</a>
+			</#if>
+		</#if>
+	</#list>
+</#macro>
